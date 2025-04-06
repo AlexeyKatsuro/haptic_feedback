@@ -28,6 +28,5 @@ enum HapticsType {
   soft,
 
   /// Indicates that a UI element’s values are changing.
-  selection,
-  ;
+  selection;
 }

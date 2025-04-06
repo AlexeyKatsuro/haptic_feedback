@@ -1,48 +1,57 @@
-# haptic_feedback
+# haptic_feedback (forked)
 
-A haptic feedback plugin for both iOS and Android.
+A haptic feedback plugin for Flutter that provides consistent cross-platform haptic experiences.  
+This fork introduces a **custom Android implementation** based on the official [`HapticFeedbackConstants`](https://developer.android.com/reference/android/view/HapticFeedbackConstants) for more precise alignment with iOS haptic types.
 
-While it utilizes [standard iOS haptics](https://developer.apple.com/design/human-interface-guidelines/playing-haptics#iOS), it aims to emulate these same haptic patterns on Android for a consistent experience across platforms.
+📦 [Original Package on pub.dev](https://pub.dev/packages/haptic_feedback)
 
-For more information on using the package in your Flutter app, you can read the article [Using haptic feedback to make your Flutter app more interactive](https://fluttercraftedbetter.com/posts/using-haptic-feedback-to-make-your-flutter-app-more-interactive) by Kamran. He provides detailed explanations on haptic feedback and when to use each type.
+---
+
+## 🚀 What's different in this fork?
+
+This fork improves the **Android behavior** by explicitly mapping each iOS-style haptic type (`HapticsType`) to a corresponding constant from Android's `HapticFeedbackConstants`. The original package aimed to emulate iOS behavior, but this fork brings more accurate feedback by utilizing Android’s native constants directly.
+
+### 🔁 Haptic Mapping Table
+
+| **iOS (`HapticsType`)** | **Android (`HapticFeedbackConstants`)** | **Description** |
+|-------------------------|-----------------------------------------|------------------|
+| `success`               | `CONFIRM (16)`                         | Signals successful task completion. |
+| `warning`               | `GESTURE_THRESHOLD_ACTIVATE (23)`      | Indicates a warning or attention is needed. |
+| `error`                 | `REJECT (17)`                          | Signals failure or error. |
+| `light`                 | `VIRTUAL_KEY (1)`                      | Light tap sensation. |
+| `medium`                | `KEYBOARD_TAP (3)`                     | Medium-strength tap, similar to keyboard press. |
+| `heavy`                 | `CONTEXT_CLICK (6)`                    | Heavy feedback, like a collision. |
+| `rigid`                 | `SEGMENT_TICK (26)`                    | Crisp, hard impact feedback. |
+| `soft`                  | `SEGMENT_FREQUENT_TICK (27)`           | Soft, subtle haptic feel. |
+| `selection`             | `CLOCK_TICK (4)`                       | Discrete selection feedback. |
+
+---
 
 ## Getting Started
 
 ### 1. Add the dependency
 
-```shell
-flutter pub add haptic_feedback
+```yaml
+dependencies:
+  haptic_feedback:
+    git:
+      url: https://github.com/AlexeyKatsuro/haptic_feedback
+      ref: v0.6.0
 ```
 
 ### 2. Use the plugin
 
 ```dart
-final canVibrate = await Haptics.canVibrate();
+await Haptics.success(); // or  await Haptics.vibrate(HapticsType.success)
+await Haptics.warning();
+await Haptics.error();
 
-await Haptics.vibrate(HapticsType.success);
-await Haptics.vibrate(HapticsType.warning);
-await Haptics.vibrate(HapticsType.error);
+await Haptics.light();
+await Haptics.medium();
+await Haptics.heavy();
 
-await Haptics.vibrate(HapticsType.light);
-await Haptics.vibrate(HapticsType.medium);
-await Haptics.vibrate(HapticsType.heavy);
+await Haptics.rigid();
+await Haptics.soft();
 
-await Haptics.vibrate(HapticsType.rigid);
-await Haptics.vibrate(HapticsType.soft);
-
-await Haptics.vibrate(HapticsType.selection);
+await Haptics.selection();
 ```
-
-## Automatic Permissions Inclusion
-
-### Android VIBRATE Permission
-
-When you integrate the `haptic_feedback` plugin into your Flutter project, it will automatically include the necessary `VIBRATE` permission in the final merged `AndroidManifest.xml` of your app. This is due to the permission being declared in the plugin's manifest.
-
-#### What this means for you:
-
-- **No Manual Action Required**: You don't have to add the `<uses-permission android:name="android.permission.VIBRATE"/>` permission to your app's `AndroidManifest.xml` manually. It will be automatically merged when building the app.
-
-- **Transparency**: By using the `haptic_feedback` plugin, your app will request the `VIBRATE` permission. Ensure that you are aware of all permissions your app requires, especially if you publish it on app stores. Some users may be sensitive to app permissions, even if they don't require explicit consent.
-
-- **Permission Overview**: To review all permissions that your app requests due to plugins and your own declarations, inspect the [final merged](https://stackoverflow.com/questions/74025731/where-is-the-merged-manifest-in-flutter-project) `AndroidManifest.xml` after a build. This will provide a comprehensive view of all permissions and other manifest entries.

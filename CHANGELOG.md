@@ -1,3 +1,21 @@
+## 0.6.0
+
+* Complete rewrite of Android implementation to use native haptic constants via `HapticFeedbackConstants`, replacing custom vibration patterns.
+* Implement `ActivityAware` to access the active `Activity` and properly invoke `performHapticFeedback`.
+* `canVibrate()` now always returns `true`, reflecting the fact that native haptic feedback will either be ignored silently or handled by the system.
+* Add shorthand methods for each haptic type:
+    - `Haptics.success()`
+    - `Haptics.warning()`
+    - `Haptics.error()`
+    - `Haptics.light()`
+    - `Haptics.medium()`
+    - `Haptics.heavy()`
+    - `Haptics.rigid()`
+    - `Haptics.soft()`
+    - `Haptics.selection()`
+      These are aliases for `Haptics.vibrate(HapticsType.X)` calls, providing a cleaner and more expressive API.
+* Add try-catch handling in `onMethodCall` to ensure proper error forwarding via `result.error`.
+
 ## 0.5.1+1
 
 * Add an article link about using the plugin to the readme. Thanks @kamranbekirovyz!
